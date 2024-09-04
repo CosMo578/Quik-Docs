@@ -63,22 +63,16 @@ const CourseMaterials = () => {
             timeCreated: metadata.timeCreated,
             downloadURL: downloadURL,
           });
-
-          console.log(downloadURL);
         }
-
-        // Output the list of files
 
         setAllDocs(fileList);
 
-        // Optionally, return the list if needed for further use
         return fileList;
       } catch (error) {
         console.error("Error listing files:", error);
       }
     };
 
-    // Call the function
     listFiles();
   });
 
@@ -110,9 +104,6 @@ const CourseMaterials = () => {
                 Type
               </th>
               <th scope="col" className="px-6 py-3">
-                Preview
-              </th>
-              <th scope="col" className="px-6 py-3">
                 Download
               </th>
             </tr>
@@ -135,12 +126,6 @@ const CourseMaterials = () => {
                   </td>
                   <td className="px-6 py-4">{formatDate(doc?.timeCreated)}</td>
                   <td className="px-6 py-4">{doc?.contentType}</td>
-                  <td className="px-6 py-4">
-                    <button className="flex items-center rounded-lg bg-primary-300 px-6 py-2.5 font-medium text-white hover:bg-primary-500 sm:w-auto">
-                      Preview
-                      <Eye className="ms-2" />
-                    </button>
-                  </td>
                   <td className="px-6 py-4">
                     <Link href={doc?.downloadURL}>
                       <button className="flex items-center rounded-lg bg-primary-300 px-6 py-2.5 font-medium text-white hover:bg-primary-500 sm:w-auto">

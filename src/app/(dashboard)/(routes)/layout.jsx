@@ -28,12 +28,12 @@ const SideNavBar = () => {
         </li>
         <li
           className={
-            pathname == "/quizzes"
+            pathname == "/quiz"
               ? "bg-primary-100 text-white"
               : "bg-neutral-100 text-neutral-600"
           }
         >
-          <Link className="flex items-center gap-4" href="/quizzes">
+          <Link className="flex items-center gap-4" href="/quiz">
             <SquarePen /> Quizzes
           </Link>
         </li>
@@ -64,11 +64,3 @@ export default function Layout({ children }) {
     </section>
   );
 }
-// <section>
-//   <header className="flex items-center justify-between">
-//     <ion-icon src="/logoipsum.svg"></ion-icon>
-//     <SignedHeader />
-//   </header>
-//   <SideNavBar />
-//   {children}
-// </section>
