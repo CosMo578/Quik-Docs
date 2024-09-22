@@ -22,6 +22,8 @@ const ChatMessage = ({ msg, currentUserId }) => {
   let chatDesign =
     msg.data.uid === currentUserId ? "rounded-br-none" : "rounded-bl-none";
 
+    console.log(msg.data?.imageUrl);
+
   return (
     <div className={`flex items-center gap-4 ${myMessage}`}>
       {msg.data.uid !== currentUserId && (
@@ -47,7 +49,7 @@ const ChatMessage = ({ msg, currentUserId }) => {
 
 const db = getFirestore(app);
 const ChatRoom = () => {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { user } = useUser();
   const [messages, setMessages] = useState([]);
   const [newMessages, setNewMessages] = useState("");
   const dummy = useRef();
@@ -65,6 +67,7 @@ const ChatRoom = () => {
 
   useEffect(() => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
+    console.log(user);
   }, [messages]);
 
   const sendMessages = async (e) => {
