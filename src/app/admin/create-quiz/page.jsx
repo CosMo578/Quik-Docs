@@ -1,5 +1,5 @@
 "use client";
-import CreateQuizForm from "@/components/CreateQuizForm";
+// import CreateQuizForm from "@/components/CreateQuizForm";
 
 const CreateQuiz = () => {
   const Questions = [];
@@ -32,10 +32,10 @@ const CreateQuiz = () => {
         </table>;
       })}
 
-      <CreateQuizForm
+      {/* <CreateQuizForm
         Questions={Questions}
         questionCount={questionCount}
-      />
+      /> */}
     </section>
   );
 };

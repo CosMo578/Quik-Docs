@@ -13,7 +13,7 @@ import { app } from "../../../../../firebaseConfig";
 
 const CourseMaterials = () => {
   const [allDocs, setAllDocs] = useState();
-  const [filteredDocs, setFilteredDocs] = useState();
+  // const [filteredDocs, setFilteredDocs] = useState();
   const [searchValue, setSearchValue] = useState("");
   const storage = getStorage(app);
 
@@ -63,21 +63,22 @@ const CourseMaterials = () => {
     return formattedDate;
   };
 
-  const FilterDocuments = () => {
-    let filtered = allDocs.filterfilter((item) =>
-      item.toLowerCase().includes(searchValue.toLowerCase()),
-    );
-    setFilteredDocs(() => filtered);
-  };
-  FilterDocuments()
+  // const FilterDocuments = () => {
+  //   let filtered = allDocs.filterfilter((item) =>
+  //     item.toLowerCase().includes(searchValue.toLowerCase()),
+  //   );
+  //   setFilteredDocs(() => filtered);
+  // };
+  // FilterDocuments()
 
   return (
-    <div className="px-10 pt-16">
-      <form>
+    // <div className="px-10 pt-16">
+    <div className="space-y-8 px-6 pt-16">
+      <form className="w-max rounded-md">
         <input
-          className=""
+          className="w-max rounded-3xl px-10 pl-4"
           type="text"
-          placeholder="Search For Documents by Name"
+          placeholder="Search For Documents by Name..."
           value={searchValue}
           onChange={(e) => setSearchValue(() => e.target.value)}
         />

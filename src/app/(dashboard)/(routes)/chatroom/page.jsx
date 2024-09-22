@@ -19,7 +19,8 @@ const ChatMessage = ({ msg, currentUserId }) => {
     msg.data.uid === currentUserId
       ? "justify-self-end flex-row-reverse"
       : "justify-self-start";
-  let chatDesign = msg.data.uid === currentUserId ? "rounded-br-none" : "rounded-bl-none";
+  let chatDesign =
+    msg.data.uid === currentUserId ? "rounded-br-none" : "rounded-bl-none";
 
   return (
     <div className={`flex items-center gap-4 ${myMessage}`}>
@@ -81,7 +82,9 @@ const ChatRoom = () => {
   };
 
   return (
-    <main className="relative mx-auto mt-10 h-[70vh] w-[70%] overflow-hidden rounded-md bg-gray-300 p-6">
+    // <main className="relative mx-auto mt-10 h-[70vh] w-[70%] overflow-hidden rounded-md bg-gray-300 p-6">
+    // <main className="relative mx-auto h-[80%] mt-20 md:mt-0 md:h-[60%] w-full overflow-hidden rounded-md bg-gray-300 p-6 lg:h-[70vh] lg:w-[80%]">
+    <main className="relative flex flex-col overflow-hidden h-screen">
       <section className="h-[85%] w-full overflow-y-scroll">
         <div className="flex flex-col gap-2 px-6">
           {messages?.map((msg) => (
@@ -91,8 +94,9 @@ const ChatRoom = () => {
         <div ref={dummy}></div>
       </section>
 
+      {/* className="absolute bottom-4 left-0 right-0 flex items-center gap-3 px-5" */}
       <form
-        className="absolute bottom-4 left-0 right-0 flex items-center gap-3 px-5"
+        className="flex items-center gap-3 p-5"
         onSubmit={(e) => sendMessages(e)}
       >
         <input
@@ -107,7 +111,7 @@ const ChatRoom = () => {
           className="rounded-full bg-primary-100 p-4 font-medium text-white"
           type="submit"
         >
-          <Send/>
+          <Send />
         </button>
       </form>
     </main>
