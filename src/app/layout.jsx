@@ -15,20 +15,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={outfit.className}>{children}</body>
-        <Script
-          async
-          type="module"
-          src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-        ></Script>
-        <script
-          async
-          noModule
-          src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-        ></script>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={outfit.className}>
+        <ClerkProvider>{children}</ClerkProvider>
+      </body>
+    </html>
   );
 }

@@ -12,7 +12,6 @@ import { app } from "../../../firebaseConfig";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 const Admin = () => {
-  const { user } = useUser();
   const [files, setFiles] = useState([]);
   const [progress, setProgress] = useState(0);
   const modal = useRef();

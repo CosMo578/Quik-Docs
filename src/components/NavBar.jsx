@@ -2,28 +2,42 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { LibraryBig, MessageSquareText, SquarePen, Upload } from "lucide-react";
+import { adminEmails } from "../../adminEmail";
 
-const SideNav = () => {
+const NavBar = () => {
   const pathname = usePathname();
+  const { user } = useUser();
+  const userEmail = user?.emailAddresses.emailAddress;
   const [isOpen, setIsOpen] = useState(false);
+  // const isAdmin = userEmail && adminEmails.includes(userEmail);
+  function findEmailMatch(emailAddresses, inputEmail) {
+    if (emailAddresses.includes(inputEmail)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  const isAdmin = findEmailMatch(adminEmails, userEmail);
+
 
   return (
     <>
-      <nav class="fixed top-0 z-50 w-full border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-        <div class="p-5 py-7 lg:px-8 lg:pl-3">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center justify-start rtl:justify-end">
+      <nav className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+        <div className="p-5 py-7 lg:px-8 lg:pl-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center justify-start rtl:justify-end">
               <button
                 onClick={() => setIsOpen((prev) => !prev)}
                 type="button"
-                class="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 lg:hidden"
+                className="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 lg:hidden"
               >
-                <span class="sr-only">Open sidebar</span>
+                <span className="sr-only">Open sidebar</span>
                 <svg
-                  class="h-6 w-6"
+                  className="h-6 w-6"
                   aria-hidden="true"
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -45,7 +59,7 @@ const SideNav = () => {
                   width={40}
                   height={25}
                 />
-                <span class="self-center whitespace-nowrap text-xl font-semibold sm:text-2xl dark:text-white">
+                <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white sm:text-2xl">
                   Quik Docs
                 </span>
               </Link>
@@ -65,18 +79,20 @@ const SideNav = () => {
 
       <aside
         id="logo-sidebar"
-        class={`fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white pt-28 transition-transform lg:translate-x-0 ${!isOpen && "-translate-x-full"}`}
+        className={`fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white pt-28 transition-transform lg:translate-x-0 ${!isOpen && "-translate-x-full"}`}
         aria-label="Sidebar"
       >
-        <div class="h-full overflow-y-auto bg-white px-3 pb-4">
-          <ul class="space-y-5 font-medium">
-            <li
-              className={`${pathname == "/admin" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
-            >
-              <Link className="flex items-center gap-4" href="/admin">
-                <Upload /> Upload Files
-              </Link>
-            </li>
+        <div className="h-full overflow-y-auto bg-white px-3 pb-4">
+          <ul className="space-y-5 font-medium">
+            {isAdmin && (
+              <li
+                className={`${pathname == "/admin" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
+              >
+                <Link className="flex items-center gap-4" href="/admin">
+                  <Upload /> Upload Files
+                </Link>
+              </li>
+            )}
 
             <li
               className={`${pathname == "/home" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
@@ -102,16 +118,18 @@ const SideNav = () => {
               </Link>
             </li>
 
-            <li
-              className={`${pathname == "/admin/create-quiz" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
-            >
-              <Link
-                className="flex items-center gap-4"
-                href="/admin/create-quiz"
+            {isAdmin && (
+              <li
+                className={`${pathname == "/admin/create-quiz" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
               >
-                <LibraryBig /> Create Quizzes
-              </Link>
-            </li>
+                <Link
+                  className="flex items-center gap-4"
+                  href="/admin/create-quiz"
+                >
+                  <LibraryBig /> Create Quizzes
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </aside>
@@ -119,4 +137,4 @@ const SideNav = () => {
   );
 };
 
-export default SideNav;
+export default NavBar;

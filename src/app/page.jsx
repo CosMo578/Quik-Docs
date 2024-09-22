@@ -1,12 +1,12 @@
-import Header from '@/components/Header';
+import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 
-const page = () => {
+const LandingPage = () => {
   return (
-    <div className='max-h-screen'>
+    <div className="max-h-screen">
       <Header />
       <Hero />
     </div>
   );
 };
-export default page;
+export default LandingPage;

@@ -106,11 +106,11 @@ const CourseMaterials = () => {
             </tr>
           </thead>
           <tbody>
-            {allDocs?.map((doc) => {
+            {allDocs?.map((doc, index) => {
               return (
                 <tr
                   className="border-b odd:bg-white even:bg-gray-50"
-                  key={crypto.getRandomValues}
+                  key={index + 1 * 3}
                 >
                   <th
                     scope="row"

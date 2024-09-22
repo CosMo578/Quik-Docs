@@ -1,15 +1,22 @@
-import AdminSideNav from "@/components/AdminSideNav";
-import { redirect } from "next/navigation";
-
+"use client";
+import NavBar from "@/components/NavBar";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { adminEmails } from '../../../adminEmail';
 
 export default function Layout({ children }) {
-  useUser.emailAddresses.emailAddress !== "raphaelakpor00@gmail.com" &&
-    redirect("/home");
+  const { user } = useUser();
+  const router = useRouter();
+  let userEmail = user?.emailAddresses.emailAddress;
+  !adminEmails.includes(userEmail) && router.push("/home");
+
+  // user?.emailAddresses.emailAddress !== "raphaelakpor@gmail.com" &&
+  //   redirect("/home");
 
   return (
     <>
-      <AdminSideNav />
-      <div class="p-4 lg:ml-64">{children}</div>
+      <NavBar />
+      <div className="p-4 lg:ml-64">{children}</div>
     </>
   );
 }
