@@ -66,8 +66,17 @@ const Quiz = () => {
     setFinalResult(false);
   };
 
+  // const syncScore = async (e) => {
+  //   await addDoc(collection(db, "messages"), {
+  //     uid: user.id,
+  //     username: user.username,
+  //     score: highScore,
+  //     timestamp: serverTimestamp(),
+  //   });
+  // };
+
   return (
-    <main className="mx-auto mt-20 w-[70%] text-center">
+    <main className="mx-auto mt-10 h-[70vh] w-[70%] rounded-md bg-gray-300 p-6 text-center">
       <h1 className="mb-6 text-3xl font-semibold">English Quiz</h1>
       {finalResult && "high score:" + highScore}
       {!finalResult ? (

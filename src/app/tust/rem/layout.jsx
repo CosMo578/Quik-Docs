@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { LibraryBig, Upload } from "lucide-react";
 import { usePathname } from "next/navigation";
 import SignedHeader from "@/components/SignedHeader";
-import { LibraryBig, SquarePen, MessageSquareText } from "lucide-react";
 
 const SideNavBar = () => {
   const pathname = usePathname();
@@ -17,35 +17,24 @@ const SideNavBar = () => {
       <ul className="space-y-4 [&_li]:rounded-l-lg [&_li]:p-4">
         <li
           className={
-            pathname == "/home"
+            pathname == "/admin"
               ? "bg-primary-100 text-white"
               : "bg-neutral-100 text-neutral-600"
           }
         >
-          <Link className="flex items-center gap-4" href="/home">
-            <LibraryBig /> Course Materials
+          <Link className="flex items-center gap-4" href="/admin">
+            <Upload /> Upload Files
           </Link>
         </li>
         <li
           className={
-            pathname == "/quiz"
+            pathname == "/admin/create-quiz"
               ? "bg-primary-100 text-white"
               : "bg-neutral-100 text-neutral-600"
           }
         >
-          <Link className="flex items-center gap-4" href="/quiz">
-            <SquarePen /> Quizzes
-          </Link>
-        </li>
-        <li
-          className={
-            pathname == "/chatroom"
-              ? "bg-primary-100 text-white"
-              : "bg-neutral-100 text-neutral-600"
-          }
-        >
-          <Link className="flex items-center gap-4" href="/chatroom">
-            <MessageSquareText /> Chatroom
+          <Link className="flex items-center gap-4" href="/admin/create-quiz">
+            <LibraryBig /> Create Quizzes
           </Link>
         </li>
       </ul>
@@ -57,10 +46,9 @@ export default function Layout({ children }) {
   return (
     <section className="flex h-screen w-screen items-start overflow-hidden">
       <SideNavBar />
-      
-      <div className="h-screen md:w-[80vw]">
+      <div className="flex-col md:w-[80vw]">
         <SignedHeader />
-        <div className="overflow-y-scroll h-[80%]">{children}</div>
+        <div className="overflow-y-scroll">{children}</div>
       </div>
     </section>
   );

@@ -8,27 +8,36 @@ import {
   query,
   serverTimestamp,
 } from "firebase/firestore";
+import Image from "next/image";
+import { Send } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
 import { app } from "../../../../../firebaseConfig";
-import { useUser } from "@clerk/nextjs";
-import Image from "next/image";
 
 const ChatMessage = ({ msg, currentUserId }) => {
   let myMessage =
     msg.data.uid === currentUserId
       ? "justify-self-end flex-row-reverse"
       : "justify-self-start";
+  let chatDesign = msg.data.uid === currentUserId ? "rounded-br-none" : "rounded-bl-none";
+
   return (
     <div className={`flex items-center gap-4 ${myMessage}`}>
-      <Image
-        className="rounded-full"
-        src={msg.data?.imageUrl}
-        alt={msg.data.alt}
-        width={50}
-        height={50}
-      />
-      <div className="space-y-1.5 rounded-xl bg-primary-100 px-4 py-3 text-white">
-        <p className="text-sm">{msg.data.username}</p>
+      {msg.data.uid !== currentUserId && (
+        <Image
+          className="rounded-full"
+          src={msg.data?.imageUrl}
+          alt={msg.data.alt}
+          width={50}
+          height={50}
+        />
+      )}
+      <div
+        className={`max-w-[70%] space-y-1.5 rounded-full bg-primary-100 px-6 py-3 text-white ${chatDesign}`}
+      >
+        {msg.data.uid !== currentUserId && (
+          <p className="text-sm">{msg.data.username}</p>
+        )}
         <p>{msg.data.text}</p>
       </div>
     </div>
@@ -53,8 +62,13 @@ const ChatRoom = () => {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    dummy.current.scrollIntoView({ behaviour: "smooth" });
+  }, [messages]);
+
   const sendMessages = async (e) => {
     e.preventDefault();
+    setNewMessages("");
     await addDoc(collection(db, "messages"), {
       uid: user.id,
       username: user.username,
@@ -63,31 +77,38 @@ const ChatRoom = () => {
       alt: user.fullName,
       timestamp: serverTimestamp(),
     });
-    setNewMessages("");
     dummy.current.scrollIntoView({ behaviour: "smooth" });
   };
 
   return (
-    <main className="h-full overflow-y-clip">
-      <section>
-        <div className='flex flex-col gap-2 px-6'>
-        {messages?.map((msg) => (
-          <ChatMessage key={msg.id} msg={msg} currentUserId={user.id} />
-        ))}
+    <main className="relative mx-auto mt-10 h-[70vh] w-[70%] overflow-hidden rounded-md bg-gray-300 p-6">
+      <section className="h-[85%] w-full overflow-y-scroll">
+        <div className="flex flex-col gap-2 px-6">
+          {messages?.map((msg) => (
+            <ChatMessage key={msg.id} msg={msg} currentUserId={user.id} />
+          ))}
         </div>
         <div ref={dummy}></div>
       </section>
 
-      <form onSubmit={(e) => sendMessages(e)}>
+      <form
+        className="absolute bottom-4 left-0 right-0 flex items-center gap-3 px-5"
+        onSubmit={(e) => sendMessages(e)}
+      >
         <input
-          className='rounded-2xl p-3 bg-green-200  mr-4'
+          className="w-full rounded-full border-primary-100 p-3 pl-6"
           type="text"
           value={newMessages}
-          placeholder='Message'
+          placeholder="Message"
           onChange={(e) => setNewMessages(e.target.value)}
           required
         />
-        <button type="submit">Send Message</button>
+        <button
+          className="rounded-full bg-primary-100 p-4 font-medium text-white"
+          type="submit"
+        >
+          <Send/>
+        </button>
       </form>
     </main>
   );

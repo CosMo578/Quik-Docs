@@ -1,99 +1,96 @@
 "use client";
-import { X } from "lucide-react";
-import { useState } from "react";
-import { app } from "../../../firebaseConfig";
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { X, XIcon } from "lucide-react";
+import { useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { app } from "../../../firebaseConfig";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 const Admin = () => {
   const { user } = useUser();
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const [progress, setProgress] = useState(0);
+  const modal = useRef();
+  const closeButton = useRef();
 
   const db = getFirestore(app);
   const storage = getStorage(app);
 
-  const metadata = {
-    contentType: file?.type,
+  const uploadFiles = async () => {
+    files.forEach((file) => {
+      const storageRef = ref(storage, "documents/" + file?.name);
+
+      const uploadTask = uploadBytesResumable(storageRef, file, {
+        contentType: file.type,
+      });
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const fileProgress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+          console.log("Upload is " + progress + "% done");
+
+          setProgress((prevProgress) => ({
+            ...prevProgress,
+            [file.name]: fileProgress,
+          }));
+        },
+        (error) => {
+          switch (error.code) {
+            case "storage/unauthorized":
+              alert("User does not have permission to access the object");
+              break;
+            case "storage/canceled":
+              alert("Operation Cancled by User");
+              break;
+            case "storage/unknown":
+              alert("Unknown error occurred");
+              break;
+          }
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref)
+            .then((downloadURL) => {
+              console.log("File available at", downloadURL);
+              saveInfo(file, downloadURL);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        },
+      );
+    });
+    setFiles([]);
+    modal.current.close();
   };
 
-  const uploadFile = async () => {
-    // Get a reference to the storage service, which is used to create references in your storage bucket
-
-    // Create a storage reference from our storage service
-    const storageRef = ref(storage, "documents/" + file?.name);
-
-    // Upload file to Firebase Storage
-    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
-
-    // Register observers to listen for when the upload is finished or fails
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        setProgress(progress);
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-      (error) => {
-        switch (error.code) {
-          case "storage/unauthorized":
-            // User doesn't have permission to access the object
-            alert("User does not have permission to access the object");
-            break;
-          case "storage/canceled":
-            // User canceled the upload
-            alert("Operation Cancled by User");
-            break;
-          case "storage/unknown":
-            // Unknown error occurred, inspect error.serverResponse
-            alert("Unknown error occurred");
-            break;
-        }
-      },
-      () => {
-        // Upload completed successfully, now we can get the download URL
-        getDownloadURL(uploadTask.snapshot.ref)
-          .then((downloadURL) => {
-            console.log("File available at", downloadURL);
-            saveInfo(file, downloadURL);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    const pdfFiles = selectedFiles.filter(
+      (file) => file.type === "application/pdf",
     );
+
+    if (pdfFiles.length !== selectedFiles.length) {
+      alert("Only PDF files are allowed.");
+    } else {
+      setFiles(pdfFiles);
+      modal.current.showModal();
+      // closeButton.current.className = "absolute";
+      // modal.current.className = "relative"
+    }
   };
 
-  // const saveInfo = async (file, fileUrl) => {
-  //   // const docId = Date.now().toString();
-
-  //   // Add a new document in collection "cities"
-  //   await setDoc(doc(db, "uploadedFile", crypto.randomUUID), {
-  //     fileName: file?.name,
-  //     fileType: file?.type,
-  //     fileSize: file?.size,
-  //     fileUrl: fileUrl,
-  //     userEmail: user?.primaryEmailAddress.emailAddress,
-  //     userName: user?.fullName,
-  //   });
-  // };
+  const hideModal = () => {
+    setFiles([]);
+    modal?.current.close();
+  };
 
   return (
     <section className="grid w-full place-items-center overflow-hidden overflow-y-auto pt-20">
@@ -125,54 +122,77 @@ const Admin = () => {
               </span>{" "}
               or drag and drop
             </p>
-            <p className="text-sm text-gray-500">
-              DOC, DOCX, PPT or PDF (MAX. 10MB)
-            </p>
+            <p className="text-sm text-gray-500">PDF (MAX. 10MB)</p>
           </div>
           <input
             id="dropzone-file"
             type="file"
             className="hidden"
-            onChange={(e) => setFile(e.target.files[0])}
+            multiple
+            onChange={handleFileChange}
           />
         </label>
       </div>
 
-      {file ? (
-        <div className="mt-6 flex items-center gap-6 rounded-lg border border-primary-100 p-3">
-          <div className="flex flex-col gap-1.5">
-            <h2 className="text-xl font-semibold">{file?.name}</h2>
-            <p className="text-sm text-gray-400">
-              {file?.type} / {(file.size / 1024 / 1024).toFixed(2)} MB
-            </p>
-          </div>
-          <X
-            onClick={() => setFile(null)}
-            className="cursor-pointer text-2xl font-semibold text-red-600"
-          />
-        </div>
-      ) : (
-        ""
-      )}
-
-      {progress > 0 ? (
-        <div class="w-full rounded-full bg-gray-200">
-          <div
-            class="rounded-full bg-secondary-100 p-0.5 text-center text-xs font-medium leading-none text-blue-100"
-            style={{ width: `${progress}%` }}
-          >
-            {Number(progress).toFixed(0) + "%"}
-          </div>
-        </div>
-      ) : (
+      <dialog
+        className={`modal overflow-hidden rounded-lg p-6 pt-16 shadow-lg ${files.length !== 0 && "relative flex flex-col items-center gap-6"}`}
+        ref={modal}
+        hidden
+      >
         <button
-          disabled={!file}
-          onClick={() => uploadFile()}
-          className="mx-auto mt-6 inline-block rounded-lg bg-primary-200 px-8 py-3 font-semibold text-white disabled:bg-gray-200"
+          className={`bg-gray-200 p-3 ${files.length !== 0 && "absolute right-0 top-0"}`}
+          onClick={() => hideModal()}
+          ref={closeButton}
         >
-          Upload
+          <XIcon className="text-3xl" />
         </button>
-      )}
+        <div className="mt-6 grid h-[60%] w-full grid-cols-2 gap-3 overflow-y-scroll">
+          {files.map((file) => (
+            <div
+              key={file.name}
+              className="flex items-center justify-between gap-4 rounded-lg border border-primary-100 p-3"
+            >
+              <div className="flex flex-col gap-1.5">
+                <h2 className="text-xl font-semibold">
+                  {file.name.length > 20
+                    ? file.name.substring(0, 20) + "..."
+                    : file.name}
+                </h2>
+                <p className="text-sm text-gray-400">
+                  {file.type} / {(file.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+              </div>
+              <X
+                onClick={() =>
+                  setFiles(files.filter((f) => f.name !== file.name))
+                }
+                className="cursor-pointer text-3xl font-semibold text-red-600"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* {Object.keys(progress).length > 0 ? (
+          files.map((file) => (
+            <div key={file.name} className="w-full rounded-full bg-gray-200">
+              <div
+                className="rounded-full bg-gray-400 p-0.5 text-center text-xs font-medium leading-none text-black"
+                style={{ width: `${progress[file.name] || 0}%` }}
+              >
+                {Number(progress[file.name] || 0).toFixed(0) + "%"}
+              </div>
+            </div>
+          )) */}
+        {/* // ) : ( */}
+          <button
+            disabled={files.length === 0}
+            onClick={() => uploadFiles()}
+            className="mx-auto mt-6 inline-block rounded-lg bg-primary-200 px-8 py-3 font-semibold text-white disabled:bg-gray-200"
+          >
+            Upload
+          </button>
+        {/* // )} */}
+      </dialog>
     </section>
   );
 };

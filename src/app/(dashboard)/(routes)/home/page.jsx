@@ -8,40 +8,18 @@ import {
 } from "firebase/storage";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Download, Eye } from "lucide-react";
+import { Download } from "lucide-react";
 import { app } from "../../../../../firebaseConfig";
 
 const CourseMaterials = () => {
   const [allDocs, setAllDocs] = useState();
+  const [filteredDocs, setFilteredDocs] = useState();
+  const [searchValue, setSearchValue] = useState("");
   const storage = getStorage(app);
+
   // Create a reference under which you want to list
   const storageRef = ref(storage, "documents/");
   const fileList = [];
-
-  // const getURL = (documentName) => {
-  //   // const document = `${storageRef + documentName}`;
-  //   getDownloadURL(ref(storage, documentName))
-  //     .then((url) => {
-  //       // `url` is the download URL for 'images/stars.jpg'
-
-  //       // This can be downloaded directly:
-  //       // const xhr = new XMLHttpRequest();
-  //       // xhr.responseType = "blob";
-  //       // xhr.onload = (event) => {
-  //       //   const blob = xhr.response;
-  //       // };
-  //       // xhr.open("GET", url);
-  //       // xhr.send();
-  //       console.log(url);
-
-  //       // Or inserted into an <img> element
-  //       // const img = document.getElementById("myimg");
-  //       // img.setAttribute("src", url);
-  //     })
-  //     .catch((error) => {
-  //       // Handle any errors
-  //     });
-  // };
 
   useEffect(() => {
     const listFiles = async () => {
@@ -85,8 +63,26 @@ const CourseMaterials = () => {
     return formattedDate;
   };
 
+  const FilterDocuments = () => {
+    let filtered = allDocs.filterfilter((item) =>
+      item.toLowerCase().includes(searchValue.toLowerCase()),
+    );
+    setFilteredDocs(() => filtered);
+  };
+  FilterDocuments()
+
   return (
     <div className="px-10 pt-16">
+      <form>
+        <input
+          className=""
+          type="text"
+          placeholder="Search For Documents by Name"
+          value={searchValue}
+          onChange={(e) => setSearchValue(() => e.target.value)}
+        />
+      </form>
+
       <section className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full max-w-max text-left text-sm text-gray-500 rtl:text-right">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700">
@@ -95,14 +91,14 @@ const CourseMaterials = () => {
                 Course Title
               </th>
               <th scope="col" className="px-6 py-3">
-                Size
+                Document Size
               </th>
               <th scope="col" className="px-6 py-3">
                 Uploaded At
               </th>
-              <th scope="col" className="px-6 py-3">
+              {/* <th scope="col" className="px-6 py-3">
                 Type
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-3">
                 Download
               </th>
@@ -125,7 +121,7 @@ const CourseMaterials = () => {
                     {(doc?.size / 1024 / 1024).toFixed(2)} MB
                   </td>
                   <td className="px-6 py-4">{formatDate(doc?.timeCreated)}</td>
-                  <td className="px-6 py-4">{doc?.contentType}</td>
+                  {/* <td className="px-6 py-4">{doc?.contentType}</td> */}
                   <td className="px-6 py-4">
                     <Link href={doc?.downloadURL}>
                       <button className="flex items-center rounded-lg bg-primary-300 px-6 py-2.5 font-medium text-white hover:bg-primary-500 sm:w-auto">
