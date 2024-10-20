@@ -55,16 +55,6 @@ const CourseMaterials = () => {
   }, [storageRef]);
 
   useEffect(() => {
-    // const FilterDocuments = async () => {
-    //   if (searchValue === "") return;
-
-    //   let filtered = await allDocs?.filter((item) =>
-    //     item.name.toLowerCase().includes(searchValue.toLowerCase()),
-    //   );
-    //   setFilteredDocs(filtered);
-    // };
-    // FilterDocuments();
-
     const filterDocuments = () => {
       if (searchValue === "") {
         setFilteredDocs(allDocs); // Show all documents when search is empty
@@ -96,23 +86,21 @@ const CourseMaterials = () => {
         <table className="min-w-full max-w-max text-left text-sm text-gray-500 rtl:text-right">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700">
             <tr>
-              <th scope="col" className="px-6 py-3 w-20">
+              <th scope="col" className="w-20 px-6 py-3">
                 Course Title
               </th>
-              <th scope="col" className="px-6 py-3 w-20">
+              <th scope="col" className="w-20 px-6 py-3">
                 Document Size
               </th>
-              <th scope="col" className="px-6 py-3 w-20">
+              <th scope="col" className="w-20 px-6 py-3">
                 Uploaded At
               </th>
-              {/* <th scope="col" className="px-6 py-3">
-                Type
-              </th> */}
-              <th scope="col" className="px-6 py-3 w-20">
+              <th scope="col" className="w-20 px-6 py-3">
                 Download
               </th>
             </tr>
           </thead>
+
           <tbody>
             {filteredDocs?.map((doc, index) => {
               return (
@@ -130,7 +118,6 @@ const CourseMaterials = () => {
                     {(doc?.size / 1024 / 1024).toFixed(2)} MB
                   </td>
                   <td className="px-6 py-4">{formatDate(doc?.timeCreated)}</td>
-                  {/* <td className="px-6 py-4">{doc?.contentType}</td> */}
                   <td className="px-6 py-4">
                     <Link href={doc?.downloadURL}>
                       <button className="flex items-center rounded-lg bg-primary-300 px-6 py-2.5 font-medium text-white hover:bg-primary-500 sm:w-auto">

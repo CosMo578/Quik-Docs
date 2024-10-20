@@ -4,24 +4,16 @@ import Image from "next/image";
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
+import { adminEmails } from "../../adminEmail";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { LibraryBig, MessageSquareText, SquarePen, Upload } from "lucide-react";
-import { adminEmails } from "../../adminEmail";
 
 const NavBar = () => {
   const pathname = usePathname();
   const { user } = useUser();
-  const userEmail = user?.emailAddresses.emailAddress;
+  const userEmail = user?.emailAddresses[0]?.emailAddress;
   const [isOpen, setIsOpen] = useState(false);
-
-  function findEmailMatch(emailAddresses) {
-    if (emailAddresses.includes(userEmail)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  const isAdmin = findEmailMatch(adminEmails);
+  const isAdmin = adminEmails.includes(userEmail); // Check if the user is an admin
 
   return (
     <>
@@ -51,13 +43,13 @@ const NavBar = () => {
               </button>
 
               <Link className="ms-2 flex text-primary-300 md:me-24" href="/">
-                <Image
+                {/* <Image
                   className="me-3 h-8 text-3xl"
                   src="/logoipsum.svg"
                   alt=""
                   width={40}
                   height={25}
-                />
+                /> */}
                 <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white sm:text-2xl">
                   Quik Docs
                 </span>
@@ -114,21 +106,10 @@ const NavBar = () => {
                 <MessageSquareText /> Chatroom
               </li>
             </Link>
-
-            {isAdmin && (
-              <Link href="/admin/create-quiz">
-                <li
-                  className={`${pathname == "/admin/create-quiz" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
-                >
-                  <LibraryBig /> Create Quizzes
-                </li>
-              </Link>
-            )}
           </ul>
         </div>
       </aside>
     </>
   );
 };
-
 export default NavBar;

@@ -81,8 +81,6 @@ const Admin = () => {
     } else {
       setFiles(pdfFiles);
       modal.current.showModal();
-      // closeButton.current.className = "absolute";
-      // modal.current.className = "relative"
     }
   };
 
@@ -92,7 +90,7 @@ const Admin = () => {
   };
 
   return (
-    <section className="grid w-full place-items-center overflow-hidden overflow-y-auto pt-20">
+    <section className="grid w-full place-items-center overflow-hidden overflow-y-auto pt-40">
       <div className="mx-auto flex w-[60%] items-center justify-center">
         <label
           htmlFor="dropzone-file"
@@ -171,26 +169,13 @@ const Admin = () => {
           ))}
         </div>
 
-        {/* {Object.keys(progress).length > 0 ? (
-          files.map((file) => (
-            <div key={file.name} className="w-full rounded-full bg-gray-200">
-              <div
-                className="rounded-full bg-gray-400 p-0.5 text-center text-xs font-medium leading-none text-black"
-                style={{ width: `${progress[file.name] || 0}%` }}
-              >
-                {Number(progress[file.name] || 0).toFixed(0) + "%"}
-              </div>
-            </div>
-          )) */}
-        {/* // ) : ( */}
-          <button
-            disabled={files.length === 0}
-            onClick={() => uploadFiles()}
-            className="mx-auto mt-6 inline-block rounded-lg bg-primary-200 px-8 py-3 font-semibold text-white disabled:bg-gray-200"
-          >
-            Upload
-          </button>
-        {/* // )} */}
+        <button
+          disabled={files.length === 0}
+          onClick={() => uploadFiles()}
+          className="mx-auto mt-6 inline-block rounded-lg bg-primary-200 px-8 py-3 font-semibold text-white disabled:bg-gray-200"
+        >
+          Upload
+        </button>
       </dialog>
     </section>
   );

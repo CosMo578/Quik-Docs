@@ -2,16 +2,24 @@
 import NavBar from "@/components/NavBar";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { adminEmails } from '../../../adminEmail';
+import { adminEmails } from "../../../adminEmail";
+import { useEffect } from "react";
 
 export default function Layout({ children }) {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const router = useRouter();
-  let userEmail = user?.emailAddresses.emailAddress;
-  !adminEmails.includes(userEmail) && router.push("/home");
 
-  // user?.emailAddresses.emailAddress !== "raphaelakpor@gmail.com" &&
-  //   redirect("/home");
+  useEffect(() => {
+    if (isLoaded) {
+      const userEmail = user?.emailAddresses[0]?.emailAddress;
+
+      if (!adminEmails.includes(userEmail)) {
+        router.push("/home"); // Redirect non-admins
+      }
+    }
+  }, [user, isLoaded, router]);
+
+  if (!isLoaded) return null;
 
   return (
     <>
