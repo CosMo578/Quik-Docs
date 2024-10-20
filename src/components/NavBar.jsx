@@ -13,16 +13,15 @@ const NavBar = () => {
   const { user } = useUser();
   const userEmail = user?.emailAddresses.emailAddress;
   const [isOpen, setIsOpen] = useState(false);
-  // const isAdmin = userEmail && adminEmails.includes(userEmail);
-  function findEmailMatch(emailAddresses, inputEmail) {
-    if (emailAddresses.includes(inputEmail)) {
+
+  function findEmailMatch(emailAddresses) {
+    if (emailAddresses.includes(userEmail)) {
       return true;
     } else {
       return false;
     }
   }
-  const isAdmin = findEmailMatch(adminEmails, userEmail);
-
+  const isAdmin = findEmailMatch(adminEmails);
 
   return (
     <>
@@ -81,52 +80,49 @@ const NavBar = () => {
         className={`fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white pt-28 transition-transform lg:translate-x-0 ${!isOpen && "-translate-x-full"}`}
       >
         <div className="h-full overflow-y-auto bg-white px-3 pb-4">
-          <ul className="space-y-5 font-medium">
+          <ul className="flex flex-col gap-5 font-medium">
             {isAdmin && (
-              <li
-                className={`${pathname == "/admin" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
-              >
-                <Link className="flex items-center gap-4" href="/admin">
+              <Link href="/admin">
+                <li
+                  className={`${pathname == "/admin" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+                >
                   <Upload /> Upload Files
-                </Link>
-              </li>
+                </li>
+              </Link>
             )}
 
-            <li
-              className={`${pathname == "/home" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
-            >
-              <Link className="flex items-center gap-4" href="/home">
+            <Link href="/home">
+              <li
+                className={`${pathname == "/home" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+              >
                 <LibraryBig /> Course Materials
-              </Link>
-            </li>
+              </li>
+            </Link>
 
-            <li
-              className={`${pathname == "/quiz" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
-            >
-              <Link className="flex items-center gap-4" href="/quiz">
+            <Link href="/quiz">
+              <li
+                className={`${pathname == "/quiz" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+              >
                 <SquarePen /> Quizzes
-              </Link>
-            </li>
+              </li>
+            </Link>
 
-            <li
-              className={`${pathname == "/chatroom" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
-            >
-              <Link className="flex items-center gap-4" href="/chatroom">
+            <Link href="/chatroom">
+              <li
+                className={`${pathname == "/chatroom" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+              >
                 <MessageSquareText /> Chatroom
-              </Link>
-            </li>
+              </li>
+            </Link>
 
             {isAdmin && (
-              <li
-                className={`${pathname == "/admin/create-quiz" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center rounded-lg p-5`}
-              >
-                <Link
-                  className="flex items-center gap-4"
-                  href="/admin/create-quiz"
+              <Link href="/admin/create-quiz">
+                <li
+                  className={`${pathname == "/admin/create-quiz" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
                 >
                   <LibraryBig /> Create Quizzes
-                </Link>
-              </li>
+                </li>
+              </Link>
             )}
           </ul>
         </div>

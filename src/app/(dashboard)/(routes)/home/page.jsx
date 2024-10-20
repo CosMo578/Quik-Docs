@@ -10,18 +10,20 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import { app } from "../../../../../firebaseConfig";
+import SearchBar from "@/components/SearchBar";
 
 const CourseMaterials = () => {
-  const [allDocs, setAllDocs] = useState();
-  // const [filteredDocs, setFilteredDocs] = useState();
+  const [allDocs, setAllDocs] = useState([]);
+  const [filteredDocs, setFilteredDocs] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const storage = getStorage(app);
 
   // Create a reference under which you want to list
   const storageRef = ref(storage, "documents/");
-  const fileList = [];
 
   useEffect(() => {
+    const fileList = [];
+
     const listFiles = async () => {
       try {
         // List all items (files) in the 'documents/' directory
@@ -44,15 +46,37 @@ const CourseMaterials = () => {
         }
 
         setAllDocs(fileList);
-
-        return fileList;
       } catch (error) {
         console.error("Error listing files:", error);
       }
     };
 
     listFiles();
-  });
+  }, [storageRef]);
+
+  useEffect(() => {
+    // const FilterDocuments = async () => {
+    //   if (searchValue === "") return;
+
+    //   let filtered = await allDocs?.filter((item) =>
+    //     item.name.toLowerCase().includes(searchValue.toLowerCase()),
+    //   );
+    //   setFilteredDocs(filtered);
+    // };
+    // FilterDocuments();
+
+    const filterDocuments = () => {
+      if (searchValue === "") {
+        setFilteredDocs(allDocs); // Show all documents when search is empty
+      } else {
+        const filtered = allDocs.filter((item) =>
+          item.name.toLowerCase().includes(searchValue.toLowerCase()),
+        );
+        setFilteredDocs(filtered);
+      }
+    };
+    filterDocuments();
+  }, [searchValue, allDocs]);
 
   const formatDate = (date) => {
     const dateObj = new Date(date);
@@ -63,50 +87,34 @@ const CourseMaterials = () => {
     return formattedDate;
   };
 
-  // const FilterDocuments = () => {
-  //   let filtered = allDocs.filterfilter((item) =>
-  //     item.toLowerCase().includes(searchValue.toLowerCase()),
-  //   );
-  //   setFilteredDocs(() => filtered);
-  // };
-  // FilterDocuments()
-
   return (
     // <div className="px-10 pt-16">
     <div className="space-y-8 px-6 pt-16">
-      <form className="w-max rounded-md">
-        <input
-          className="w-max rounded-3xl px-10 pl-4"
-          type="text"
-          placeholder="Search For Documents by Name..."
-          value={searchValue}
-          onChange={(e) => setSearchValue(() => e.target.value)}
-        />
-      </form>
+      <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
 
       <section className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full max-w-max text-left text-sm text-gray-500 rtl:text-right">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 w-20">
                 Course Title
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 w-20">
                 Document Size
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 w-20">
                 Uploaded At
               </th>
               {/* <th scope="col" className="px-6 py-3">
                 Type
               </th> */}
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 w-20">
                 Download
               </th>
             </tr>
           </thead>
           <tbody>
-            {allDocs?.map((doc, index) => {
+            {filteredDocs?.map((doc, index) => {
               return (
                 <tr
                   className="border-b odd:bg-white even:bg-gray-50"

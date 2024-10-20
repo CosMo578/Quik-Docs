@@ -77,7 +77,7 @@ const ChatRoom = () => {
       uid: user.id,
       username: user.username,
       text: newMessages,
-      image: user.imageUrl,
+      image: user?.imageUrl,
       alt: user.fullName,
       timestamp: serverTimestamp(),
     });
@@ -85,8 +85,6 @@ const ChatRoom = () => {
   };
 
   return (
-    // <main className="relative mx-auto mt-10 h-[70vh] w-[70%] overflow-hidden rounded-md bg-gray-300 p-6">
-    // <main className="relative mx-auto h-[80%] mt-20 md:mt-0 md:h-[60%] w-full overflow-hidden rounded-md bg-gray-300 p-6 lg:h-[70vh] lg:w-[80%]">
     <main className="relative flex flex-col overflow-hidden h-screen">
       <section className="h-[85%] w-full overflow-y-scroll">
         <div className="flex flex-col gap-2 px-6">
@@ -97,7 +95,6 @@ const ChatRoom = () => {
         <div ref={dummy}></div>
       </section>
 
-      {/* className="absolute bottom-4 left-0 right-0 flex items-center gap-3 px-5" */}
       <form
         className="flex items-center gap-3 p-5"
         onSubmit={(e) => sendMessages(e)}

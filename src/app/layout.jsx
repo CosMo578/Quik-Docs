@@ -1,7 +1,6 @@
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Outfit } from "next/font/google";
-import Script from "next/script";
 
 const outfit = Outfit({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
