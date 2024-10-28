@@ -85,7 +85,7 @@ const ChatRoom = () => {
   };
 
   return (
-    <main className="relative flex flex-col overflow-hidden h-screen">
+    <main className="relative flex flex-col overflow-hidden h-[90vh] pt-12">
       <section className="h-[85%] w-full overflow-y-scroll">
         <div className="flex flex-col gap-2 px-6">
           {messages?.map((msg) => (
@@ -96,7 +96,7 @@ const ChatRoom = () => {
       </section>
 
       <form
-        className="flex items-center gap-3 p-5"
+        className="flex items-center gap-3 p-5 sticky bottom-0 left-0 right-0"
         onSubmit={(e) => sendMessages(e)}
       >
         <input

@@ -1,10 +1,16 @@
 import Link from "next/link";
+import quiz from '/quizzes.json'
 
 const Quiz = () => {
+  
+  const courses = quiz.quizzes 
+  console.log(courses[1]?.courseTitle);
+  
   return (
     <div className="mt-[10vh] text-black">
       <h1 className="text-center text-2xl">Welcome to Quizzes</h1>
       <ul className="[&_li]:bg-primary mx-auto mt-12 grid w-[60%] grid-cols-3 gap-6 [&_li]:rounded-md [&_li]:bg-primary-100 [&_li]:p-2 [&_li]:text-center [&_li]:text-white">
+
         <Link href="quiz/com221">
           <li>Com 221</li>
         </Link>

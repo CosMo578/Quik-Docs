@@ -8,8 +8,8 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "Quick Docs",
-  description: "A Student platform tailored to ",
+  title: "Student Study Portal",
+  description: "A Student platform tailored to provide course materials, quizzes and an open chatroom for all to share knowledge and learn.",
 };
 
 export default function RootLayout({ children }) {

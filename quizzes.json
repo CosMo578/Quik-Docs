@@ -113,7 +113,7 @@
       ]
     },
     {
-      "quizTitle": "MTH Questions",
+      "courseTitle": "MTH Questions",
       "questions": [
         {
           "question": "(1.28 x 10^4) ÷ (6.4 x 10^2) equals",
@@ -196,7 +196,7 @@
       ]
     },
     {
-      "quizTitle": "COM215 Questions",
+      "courseTitle": "COM215 Questions",
       "questions": [
         {
           "question": "What is a beep code in the context of computer hardware troubleshooting?",

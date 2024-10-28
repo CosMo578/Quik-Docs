@@ -51,7 +51,7 @@ const NavBar = () => {
                   height={25}
                 /> */}
                 <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white sm:text-2xl">
-                  Quik Docs
+                  Student Study Portal
                 </span>
               </Link>
             </div>

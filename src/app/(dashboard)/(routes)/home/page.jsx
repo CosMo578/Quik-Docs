@@ -79,7 +79,7 @@ const CourseMaterials = () => {
 
   return (
     // <div className="px-10 pt-16">
-    <div className="space-y-8 px-6 pt-16">
+    <div className="space-y-8 px-10 pt-16">
       <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
 
       <section className="relative overflow-x-auto shadow-md sm:rounded-lg">
