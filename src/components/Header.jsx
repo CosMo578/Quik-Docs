@@ -9,13 +9,12 @@ const Header = () => {
           <div className="md:flex md:items-center md:gap-12">
             <a className="block text-primary-300" href="/">
               <span className="sr-only">Home</span>
-              {/* <Image
-                className="text-3xl"
-                src="/logoipsum.svg"
-                alt=""
-                width={40}
-                height={25}
-              /> */}
+              <Image
+                src="/pti-logo.svg"
+                alt="pti logo"
+                width={50}
+                height={50}
+              />
             </a>
           </div>
 

@@ -22,24 +22,24 @@ const ChatMessage = ({ msg, currentUserId }) => {
   let chatDesign =
     msg.data.uid === currentUserId ? "rounded-br-none" : "rounded-bl-none";
 
-    console.log(msg.data?.imageUrl);
+  console.log(msg.data?.imageUrl);
 
   return (
     <div className={`flex items-center gap-4 ${myMessage}`}>
-      {msg.data.uid !== currentUserId && (
+      {msg.data.uid !== currentUserId && msg?.data?.imageUrl && (
         <Image
           className="rounded-full"
-          src={msg.data?.imageUrl}
+          src={msg?.data?.imageUrl}
           alt={msg.data.alt}
           width={50}
           height={50}
         />
       )}
       <div
-        className={`max-w-[70%] space-y-1.5 rounded-full bg-primary-100 px-6 py-3 text-white ${chatDesign}`}
+        className={`max-w-[70%] space-y-1.5 rounded-[6rem] bg-primary-100 px-6 py-3 text-white ${chatDesign}`}
       >
         {msg.data.uid !== currentUserId && (
-          <p className="text-sm">{msg.data.username}</p>
+          <p className="text-md font-bold">{msg.data.username}</p>
         )}
         <p>{msg.data.text}</p>
       </div>
@@ -68,11 +68,12 @@ const ChatRoom = () => {
   useEffect(() => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
     console.log(user);
-  }, [messages]);
+  }, [messages, user]);
 
   const sendMessages = async (e) => {
     e.preventDefault();
     setNewMessages("");
+
     await addDoc(collection(db, "messages"), {
       uid: user.id,
       username: user.username,
@@ -85,7 +86,7 @@ const ChatRoom = () => {
   };
 
   return (
-    <main className="relative flex flex-col overflow-hidden h-[90vh] pt-12">
+    <main className="relative flex h-[90vh] flex-col overflow-hidden pt-12">
       <section className="h-[85%] w-full overflow-y-scroll">
         <div className="flex flex-col gap-2 px-6">
           {messages?.map((msg) => (
@@ -96,7 +97,7 @@ const ChatRoom = () => {
       </section>
 
       <form
-        className="flex items-center gap-3 p-5 sticky bottom-0 left-0 right-0"
+        className="sticky bottom-0 left-0 right-0 flex items-center gap-3 p-5"
         onSubmit={(e) => sendMessages(e)}
       >
         <input

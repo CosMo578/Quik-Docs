@@ -79,23 +79,23 @@ const CourseMaterials = () => {
 
   return (
     // <div className="px-10 pt-16">
-    <div className="space-y-8 px-10 pt-16">
+    <div className="space-y-8 px-10 py-16">
       <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
 
       <section className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full max-w-max text-left text-sm text-gray-500 rtl:text-right">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700">
             <tr>
-              <th scope="col" className="w-20 px-6 py-3">
+              <th scope="col" className="w-32 px-6 py-3">
                 Course Title
               </th>
-              <th scope="col" className="w-20 px-6 py-3">
+              <th scope="col" className="w-32 px-6 py-3">
                 Document Size
               </th>
-              <th scope="col" className="w-20 px-6 py-3">
+              <th scope="col" className="w-32 px-6 py-3">
                 Uploaded At
               </th>
-              <th scope="col" className="w-20 px-6 py-3">
+              <th scope="col" className="w-32 px-6 py-3">
                 Download
               </th>
             </tr>

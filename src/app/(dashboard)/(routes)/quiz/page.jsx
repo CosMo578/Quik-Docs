@@ -1,26 +1,38 @@
-import Link from "next/link";
-import quiz from '/quizzes.json'
+"use client";
+import { useState } from "react";
+import quiz from "/quizzes.json";
+import PopupModal from "@/components/PopupModal";
 
 const Quiz = () => {
-  
-  const courses = quiz.quizzes 
-  console.log(courses[1]?.courseTitle);
-  
+  const courses = quiz?.quizzes;
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  const handleCourseClick = (course) => {
+    setSelectedCourse(course);
+    setOpenModal(true);
+  };
+
   return (
     <div className="mt-[10vh] text-black">
       <h1 className="text-center text-2xl">Welcome to Quizzes</h1>
-      <ul className="[&_li]:bg-primary mx-auto mt-12 grid w-[60%] grid-cols-3 gap-6 [&_li]:rounded-md [&_li]:bg-primary-100 [&_li]:p-2 [&_li]:text-center [&_li]:text-white">
-
-        <Link href="quiz/com221">
-          <li>Com 221</li>
-        </Link>
-        <Link href="quiz/com223">
-          <li>Com 223</li>
-        </Link>
-        <Link href="quiz/pgt123">
-          <li>PGT 123</li>
-        </Link>
+      <ul className="mx-auto mt-12 grid w-[60%] grid-cols-3 gap-6 [&_li]:rounded-md [&_li]:bg-primary-100 [&_li]:p-2 [&_li]:text-center [&_li]:text-white">
+        {courses.map((course) => (
+          <li
+            className="cursor-pointer"
+            key={course.courseTitle}
+            onClick={() => handleCourseClick(course)}
+          >
+            {course.courseCode}
+          </li>
+        ))}
       </ul>
+
+      <PopupModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        course={selectedCourse}
+      />
     </div>
   );
 };

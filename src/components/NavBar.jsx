@@ -6,7 +6,13 @@ import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { adminEmails } from "../../adminEmail";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { LibraryBig, MessageSquareText, SquarePen, Upload } from "lucide-react";
+import {
+  CircleCheckBig,
+  LibraryBig,
+  MessageSquareText,
+  SquarePen,
+  Upload,
+} from "lucide-react";
 
 const NavBar = () => {
   const pathname = usePathname();
@@ -43,14 +49,14 @@ const NavBar = () => {
               </button>
 
               <Link className="ms-2 flex text-primary-300 md:me-24" href="/">
-                {/* <Image
-                  className="me-3 h-8 text-3xl"
-                  src="/logoipsum.svg"
+                <Image
+                  className="me-3 text-3xl"
+                  src="/pti-logo.svg"
                   alt=""
-                  width={40}
-                  height={25}
-                /> */}
-                <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white sm:text-2xl">
+                  width={50}
+                  height={50}
+                />
+                <span className="self-center whitespace-nowrap text-2xl font-semibold hidden lg:block">
                   Student Study Portal
                 </span>
               </Link>
@@ -69,7 +75,7 @@ const NavBar = () => {
       </nav>
 
       <aside
-        className={`fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white pt-28 transition-transform lg:translate-x-0 ${!isOpen && "-translate-x-full"}`}
+        className={`fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white pt-32 transition-transform lg:translate-x-0 ${!isOpen && "-translate-x-full"}`}
       >
         <div className="h-full overflow-y-auto bg-white px-3 pb-4">
           <ul className="flex flex-col gap-5 font-medium">
@@ -93,7 +99,7 @@ const NavBar = () => {
 
             <Link href="/quiz">
               <li
-                className={`${pathname == "/quiz" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+                className={`${pathname.includes("/quiz") ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
               >
                 <SquarePen /> Quizzes
               </li>

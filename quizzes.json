@@ -1,7 +1,8 @@
 {
   "quizzes": [
     {
-      "courseTitle": "GNS Questions for ND",
+      "courseTitle": "Communication in English 1",
+      "courseCode": "GNS 101",
       "questions": [
         {
           "question": "What does intensive reading mean?",
@@ -15,20 +16,20 @@
         {
           "question": "What are the three characteristics of language?",
           "options": [
-            "Semantics, Phonology & Syntax",
             "Read, Speak and Listen",
-            "Voice, Action and Vision"
+            "Voice, Action and Vision",
+            "Semantics, Phonology & Syntax"
           ],
-          "correctAnswer": 0
+          "correctAnswer": 2
         },
         {
           "question": "The pronouns that refer to the subject of a sentence are called what?",
           "options": [
-            "Subject Pronoun",
             "Object Pronoun",
+            "Subject Pronoun",
             "Possessive Adjective"
           ],
-          "correctAnswer": 0
+          "correctAnswer": 1
         },
         {
           "question": "Pronouns that are used when those concerned share the action of the verb are called?",
@@ -41,17 +42,17 @@
         },
         {
           "question": "The process of adding morphemes to bases is called?",
-          "options": ["Derivation", "Compounding", "Inflection"],
-          "correctAnswer": 0
+          "options": ["Compounding", "Derivation", "Inflection"],
+          "correctAnswer": 1
         },
         {
           "question": "What are gerunds?",
           "options": [
-            "Verbs ending in '-ing' that function as nouns",
             "Adjectives that describe emotions",
-            "Adverbs that modify a verb"
+            "Adverbs that modify a verb",
+            "Verbs ending in '-ing' that function as nouns"
           ],
-          "correctAnswer": 0
+          "correctAnswer": 2
         },
         {
           "question": "The only eight form verb in English is?",
@@ -60,8 +61,8 @@
         },
         {
           "question": "Words that end in 'less' are?",
-          "options": ["Adjectives", "Adverbs", "Verbs"],
-          "correctAnswer": 0
+          "options": ["Adverbs", "Verbs", "Adjectives"],
+          "correctAnswer": 2
         },
         {
           "question": "Extensive reading involves?",
@@ -75,20 +76,20 @@
         {
           "question": "What kind of articles are 'a' and 'an'?",
           "options": [
-            "Indefinite Articles",
             "Definite Articles",
+            "Indefinite Articles",
             "None of the above"
           ],
-          "correctAnswer": 0
+          "correctAnswer": 1
         },
         {
           "question": "The tendency to say out what is read silently is called?",
           "options": [
-            "Subvocalization",
             "Loud Reading",
+            "Subvocalization",
             "Silent Pronunciation"
           ],
-          "correctAnswer": 0
+          "correctAnswer": 1
         },
         {
           "question": "What type of noun is always capitalized?",
@@ -97,8 +98,8 @@
         },
         {
           "question": "In English, the name given to a set of rules that govern the use of words and production of well-formed sentences to make meaning is called?",
-          "options": ["Grammar", "Expression", "Idioms"],
-          "correctAnswer": 0
+          "options": ["Expression", "Idioms", "Grammar"],
+          "correctAnswer": 2
         },
         {
           "question": "Words that end in 'ch' are pronounced as 'k' form the plurals by?",
@@ -113,7 +114,8 @@
       ]
     },
     {
-      "courseTitle": "MTH Questions",
+      "courseTitle": "Introduction to Trigonometry",
+      "courseCode": "MTH 111",
       "questions": [
         {
           "question": "(1.28 x 10^4) ÷ (6.4 x 10^2) equals",
@@ -196,7 +198,8 @@
       ]
     },
     {
-      "courseTitle": "COM215 Questions",
+      "courseTitle": "PC Upgrade and Maintenance",
+      "courseCode": "COM 215",
       "questions": [
         {
           "question": "What is a beep code in the context of computer hardware troubleshooting?",
@@ -346,21 +349,6 @@
             "Use the BIOS settings to turn off beep codes",
             "Wait for the system to correct itself after restarting"
           ],
-          "correctAnswer": 1
-        }
-      ]
-    },
-    {
-      "courseTitle": "Another Course Title",
-      "questions": [
-        {
-          "question": "Sample question for another course?",
-          "options": ["Option A", "Option B", "Option C"],
-          "correctAnswer": 0
-        },
-        {
-          "question": "Another question?",
-          "options": ["Answer A", "Answer B", "Answer C"],
           "correctAnswer": 1
         }
       ]
