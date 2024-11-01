@@ -10,19 +10,25 @@ import { useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { app } from "../../../firebaseConfig";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
+import UploadComponent from "@/components/UploadComponent";
 
 const Admin = () => {
-  const [files, setFiles] = useState([]);
-  const [progress, setProgress] = useState(0);
   const modal = useRef();
   const closeButton = useRef();
-
-  const db = getFirestore(app);
+  const [files, setFiles] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [collectionName, setCollectionName] = useState("");
   const storage = getStorage(app);
 
   const uploadFiles = async () => {
+    if (!collectionName) {
+      alert("Please select a collection");
+    }
     files.forEach((file) => {
-      const storageRef = ref(storage, "documents/" + file?.name);
+      const storagePath =
+        collectionName === "courseMaterials" ? `documents/` : `pastQuestions/`;
+
+      const storageRef = ref(storage, `${storagePath}${file?.name}`);
 
       const uploadTask = uploadBytesResumable(storageRef, file, {
         contentType: file.type,
@@ -91,45 +97,46 @@ const Admin = () => {
 
   return (
     <section className="grid w-full place-items-center overflow-hidden overflow-y-auto pt-40">
-      <div className="mx-auto flex w-[60%] items-center justify-center">
-        <label
-          htmlFor="dropzone-file"
-          className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
-        >
-          <div className="flex flex-col items-center justify-center pb-6 pt-5">
-            <svg
-              className="mb-4 size-12 text-primary-200"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 16"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-              />
-            </svg>
-
-            <p className="mb-2 text-base text-gray-500">
-              <span className="font-semibold text-primary-100">
-                Click to upload
-              </span>{" "}
-              or drag and drop
-            </p>
-            <p className="text-sm text-gray-500">PDF (MAX. 10MB)</p>
-          </div>
+      <ul class="mb-8 grid w-[60%] gap-6 md:grid-cols-2">
+        <li>
           <input
-            id="dropzone-file"
-            type="file"
-            className="hidden"
-            multiple
-            onChange={handleFileChange}
+            type="radio"
+            id="courseMaterials"
+            name="fileOption"
+            value="courseMaterials"
+            onChange={() => setCollectionName("courseMaterials")}
+            class="peer hidden"
+            required
           />
-        </label>
-      </div>
+          <label
+            for="courseMaterials"
+            class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-100 peer-checked:text-primary-100"
+          >
+            <div class="block">Upload Course Materials</div>
+          </label>
+        </li>
+        <li>
+          <input
+            type="radio"
+            id="pastQuestions"
+            name="fileOption"
+            value="pastQuestions"
+            onChange={() => setCollectionName("pastQuestions")}
+            class="peer hidden"
+          />
+          <label
+            for="pastQuestions"
+            class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-100 peer-checked:text-primary-100"
+          >
+            <div class="block">Upload Past Questions</div>
+          </label>
+        </li>
+      </ul>
+
+      <UploadComponent
+        handleFileChange={handleFileChange}
+        collectionName={collectionName}
+      />
 
       <dialog
         className={`modal overflow-hidden rounded-lg p-6 pt-16 shadow-lg ${files.length !== 0 && "relative flex flex-col items-center gap-6"}`}

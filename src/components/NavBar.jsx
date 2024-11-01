@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { adminEmails } from "../../adminEmail";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import {
+  Album,
   CircleCheckBig,
   LibraryBig,
   MessageSquareText,
@@ -56,7 +57,7 @@ const NavBar = () => {
                   width={50}
                   height={50}
                 />
-                <span className="self-center whitespace-nowrap text-2xl font-semibold hidden lg:block">
+                <span className="hidden self-center whitespace-nowrap text-2xl font-semibold lg:block">
                   Student Study Portal
                 </span>
               </Link>
@@ -94,6 +95,14 @@ const NavBar = () => {
                 className={`${pathname == "/home" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
               >
                 <LibraryBig /> Course Materials
+              </li>
+            </Link>
+
+            <Link href="/pastQuestions">
+              <li
+                className={`${pathname == "/pastQuestions" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+              >
+                <Album /> Past Questions
               </li>
             </Link>
 
