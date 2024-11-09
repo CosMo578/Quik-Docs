@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { adminEmails } from "../../adminEmail";
@@ -9,18 +9,35 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import {
   Album,
   CircleCheckBig,
+  LayoutDashboard,
   LibraryBig,
+  ListCollapse,
+  LogOut,
+  MessageCircleMore,
   MessageSquareText,
   SquarePen,
   Upload,
 } from "lucide-react";
+import { AuthContext } from "@/app/Context/AuthContext";
+import { Menu, MenuItem, MenuItems, MenuButton } from "@headlessui/react";
 
 const NavBar = () => {
   const pathname = usePathname();
-  const { user } = useUser();
-  const userEmail = user?.emailAddresses[0]?.emailAddress;
+  const { currentUser } = useContext(AuthContext);
+
+  const userEmail = currentUser?.email;
   const [isOpen, setIsOpen] = useState(false);
   const isAdmin = adminEmails.includes(userEmail); // Check if the user is an admin
+
+  const logout = async () => {
+    try {
+      signOut(auth);
+      document.cookie = "token=; Max-Age=0; path=/"; // Clear token
+      router.push("/"); // Redirect to login
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -63,13 +80,55 @@ const NavBar = () => {
               </Link>
             </div>
 
-            <div className="scale-[1.5]">
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
+            <div>
+              {currentUser ? (
+                <Menu as="div" className="relative ml-3">
+                  <MenuButton className="relative flex rounded-full bg-gray-800 text-sm">
+                    <span className="absolute -inset-1.5" />
+                    <span className="sr-only">Open user menu</span>
+                    <Image
+                      className="cursor-pointer rounded-full"
+                      src="/user-dummy.png"
+                      alt="user photo"
+                      width={50}
+                      height={50}
+                    />
+                  </MenuButton>
+
+                  <MenuItems
+                    transition
+                    className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  >
+                    {/* <MenuItem>
+                          <Link
+                            href="/seller/my-products"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                          >
+                            <ListCollapse className="me-2 inline size-4" />
+                            My Products
+                          </Link>
+                        </MenuItem> */}
+
+                    <MenuItem>
+                      <span
+                        onClick={() => logout()}
+                        className="flex cursor-pointer items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        <LogOut className="me-2 inline size-4" /> Sign out
+                      </span>
+                    </MenuItem>
+                  </MenuItems>
+                </Menu>
+              ) : (
+                <Link href="/login">
+                  <button
+                    type="button"
+                    className="bg-primary rounded-lg px-4 py-2 text-center font-bold text-white"
+                  >
+                    Login
+                  </button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -81,13 +140,13 @@ const NavBar = () => {
         <div className="h-full overflow-y-auto bg-white px-3 pb-4">
           <ul className="flex flex-col gap-5 font-medium">
             {isAdmin && (
-              <Link href="/admin">
-                <li
-                  className={`${pathname == "/admin" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
-                >
-                  <Upload /> Upload Files
-                </li>
-              </Link>
+            <Link href="/admin">
+              <li
+                className={`${pathname == "/admin" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+              >
+                <Upload /> Upload Files
+              </li>
+            </Link>
             )}
 
             <Link href="/home">

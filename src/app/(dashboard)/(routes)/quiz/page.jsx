@@ -16,7 +16,7 @@ const Quiz = () => {
   return (
     <div className="mt-[10vh] text-black">
       <h1 className="text-center text-2xl">Welcome to Quizzes</h1>
-      <ul className="mx-auto mt-12 grid w-[60%] grid-cols-3 gap-6 [&_li]:rounded-md [&_li]:bg-primary-100 [&_li]:p-2 [&_li]:text-center [&_li]:text-white">
+      <ul className="mx-auto mt-12 grid lg:w-[60%] px-4 grid-cols-3 gap-6 [&_li]:rounded-md [&_li]:bg-primary-100 [&_li]:p-2 [&_li]:text-center [&_li]:text-white">
         {courses.map((course) => (
           <li
             className="cursor-pointer"

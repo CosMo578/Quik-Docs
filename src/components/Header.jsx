@@ -22,7 +22,7 @@ const Header = () => {
             <div className="sm:flex sm:gap-4">
               <Link
                 className="rounded-lg bg-primary-300 px-6 py-2.5 font-semibold text-white shadow hover:bg-primary-500"
-                href="/sign-in"
+                href="/login"
               >
                 Login
               </Link>

@@ -6,11 +6,12 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { X, XIcon } from "lucide-react";
-import { useRef, useState } from "react";
-import { useUser } from "@clerk/nextjs";
-import { app } from "../../../firebaseConfig";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { useRef, useState, useEffect, useContext } from "react";
 import UploadComponent from "@/components/UploadComponent";
+import { useRouter } from "next/navigation";
+import { adminEmails } from "../../../adminEmail";
+import { AuthContext } from "../Context/AuthContext";
+import { storage } from "../config/firebase";
 
 const Admin = () => {
   const modal = useRef();
@@ -18,7 +19,21 @@ const Admin = () => {
   const [files, setFiles] = useState([]);
   const [progress, setProgress] = useState(0);
   const [collectionName, setCollectionName] = useState("");
-  const storage = getStorage(app);
+
+  const { currentUser } = useContext(AuthContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    const userEmail = currentUser?.email;
+
+    if (currentUser !== undefined) {
+      return;
+    } else {
+      if (!adminEmails.includes(userEmail)) {
+        router.push("/home"); // Redirect non-admins
+      }
+    }
+  }, [currentUser, router]);
 
   const uploadFiles = async () => {
     if (!collectionName) {

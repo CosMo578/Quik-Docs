@@ -10,36 +10,36 @@ import {
 } from "firebase/firestore";
 import Image from "next/image";
 import { Send } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
-import { useEffect, useRef, useState } from "react";
-import { app } from "../../../../../firebaseConfig";
+import { useContext, useEffect, useRef, useState } from "react";
+import { db } from "@/app/config/firebase";
+import { AuthContext } from '@/app/Context/AuthContext';
 
 const ChatMessage = ({ msg, currentUserId }) => {
   let myMessage =
-    msg.data.uid === currentUserId
+    msg.data.userEmail === currentUserId
       ? "justify-self-end flex-row-reverse"
       : "justify-self-start";
   let chatDesign =
-    msg.data.uid === currentUserId ? "rounded-br-none" : "rounded-bl-none";
-
-  console.log(msg.data?.imageUrl);
+    msg.data.userEmail === currentUserId
+      ? "rounded-br-none"
+      : "rounded-bl-none";
 
   return (
     <div className={`flex items-center gap-4 ${myMessage}`}>
-      {msg.data.uid !== currentUserId && msg?.data?.imageUrl && (
+      {msg.data.userEmail !== currentUserId && msg?.data?.imageUrl && (
         <Image
           className="rounded-full"
-          src={msg?.data?.imageUrl}
-          alt={msg.data.alt}
+          src='/user-dummy.png'
+          alt='user image'
           width={50}
           height={50}
         />
       )}
       <div
-        className={`max-w-[70%] space-y-1.5 rounded-[6rem] bg-primary-100 px-6 py-3 text-white ${chatDesign}`}
+        className={`max-w-fit space-y-1.5 rounded-[6rem] bg-primary-100 px-6 py-3 text-white ${chatDesign}`}
       >
-        {msg.data.uid !== currentUserId && (
-          <p className="text-md font-bold">{msg.data.username}</p>
+        {msg.data.userEmail !== currentUserId && (
+          <p className="text-md font-bold">{msg.data.userEmail}</p>
         )}
         <p>{msg.data.text}</p>
       </div>
@@ -47,9 +47,10 @@ const ChatMessage = ({ msg, currentUserId }) => {
   );
 };
 
-const db = getFirestore(app);
 const ChatRoom = () => {
-  const { user } = useUser();
+  const { currentUser } = useContext(AuthContext);
+  const userEmail = currentUser?.email;
+
   const [messages, setMessages] = useState([]);
   const [newMessages, setNewMessages] = useState("");
   const dummy = useRef();
@@ -67,19 +68,16 @@ const ChatRoom = () => {
 
   useEffect(() => {
     dummy.current.scrollIntoView({ behaviour: "smooth" });
-    console.log(user);
-  }, [messages, user]);
+    console.log(currentUser);
+  }, [messages, currentUser]);
 
   const sendMessages = async (e) => {
     e.preventDefault();
     setNewMessages("");
 
     await addDoc(collection(db, "messages"), {
-      uid: user.id,
-      username: user.username,
+      userEmail: userEmail,
       text: newMessages,
-      image: user?.imageUrl,
-      alt: user.fullName,
       timestamp: serverTimestamp(),
     });
     dummy.current.scrollIntoView({ behaviour: "smooth" });
@@ -90,7 +88,7 @@ const ChatRoom = () => {
       <section className="h-[85%] w-full overflow-y-scroll">
         <div className="flex flex-col gap-2 px-6">
           {messages?.map((msg) => (
-            <ChatMessage key={msg.id} msg={msg} currentUserId={user.id} />
+            <ChatMessage key={msg.id} msg={msg} currentUserId={userEmail} />
           ))}
         </div>
         <div ref={dummy}></div>

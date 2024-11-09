@@ -9,14 +9,13 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
-import { app } from "../../../../../firebaseConfig";
 import SearchBar from "@/components/SearchBar";
+import { storage } from '@/app/config/firebase';
 
 const CourseMaterials = () => {
   const [allDocs, setAllDocs] = useState([]);
   const [filteredDocs, setFilteredDocs] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const storage = getStorage(app);
 
   // Create a reference under which you want to list
   const storageRef = ref(storage, "documents/");

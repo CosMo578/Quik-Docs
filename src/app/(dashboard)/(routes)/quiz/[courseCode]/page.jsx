@@ -1,17 +1,20 @@
 "use client";
 import { ChevronRight } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import quizData from "/quizzes.json";
 import { useUser } from "@clerk/nextjs";
-import { app } from "../../../../../../firebaseConfig";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { db } from "@/app/config/firebase";
+import { AuthContext } from '@/app/Context/AuthContext';
 
-const db = getFirestore(app);
 const CourseQuiz = () => {
   const param = useParams();
   const qid = param.courseCode;
-  const { user } = useUser();
+  const { currentUser } = useContext(AuthContext);
+  const userEmail = currentUser?.email;
+
+  // const { user } = useUser();
   const quizID = decodeURIComponent(qid);
 
   const [score, setScore] = useState(0);
@@ -26,9 +29,9 @@ const CourseQuiz = () => {
 
   useEffect(() => {
     const fetchHighScore = async () => {
-      if (user) {
+      if (currentUser) {
         const highScoreDoc = await getDoc(
-          doc(db, `users/${user.id}/highScores`, qid),
+          doc(db, `users/${currentUser.id}/highScores`, qid),
         );
         if (highScoreDoc.exists()) {
           setHighScore(highScoreDoc.data()?.score || 0);
@@ -36,7 +39,7 @@ const CourseQuiz = () => {
       }
     };
     fetchHighScore();
-  }, [user, qid]);
+  }, [currentUser, qid]);
 
   useEffect(() => {
     // Find the quiz matching the provided course code
@@ -89,8 +92,8 @@ const CourseQuiz = () => {
   }, [timeLeft, finalResult]);
 
   const handleQuizCompletion = async () => {
-    if (score > highScore && user) {
-      const highScoreRef = doc(db, `users/${user.id}/highScores`, qid);
+    if (score > highScore && currentUser) {
+      const highScoreRef = doc(db, `users/${currentUser.id}/highScores`, qid);
       await setDoc(highScoreRef, { score });
       setHighScore(score);
     }
@@ -116,8 +119,8 @@ const CourseQuiz = () => {
   };
 
   return (
-    <main className="mx-auto mt-10 min-h-[70vh] w-[70%] p-6 py-10">
-      <div className="mb-10 flex items-center justify-between">
+    <main className="mx-auto mt-10 min-h-[70vh] lg:w-[70%] p-6 py-10">
+      <div className="mb-10 flex flex-col lg:flex-row items-center justify-between">
         <h1 className="text-2xl">{quizID}</h1>
 
         <p>
@@ -132,7 +135,7 @@ const CourseQuiz = () => {
 
       {finalResult ? (
         <div>
-          <div className="text-center space-y-3">
+          <div className="space-y-3 text-center">
             <h1 className="text-2xl font-medium">Final Result</h1>
             <p>
               You got {score} out of {quizQuestions.length} questions correct

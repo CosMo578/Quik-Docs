@@ -18,7 +18,7 @@ const Hero = () => {
             a community for sharing ideas
           </p>
 
-          <Link href="/sign-up">
+          <Link href="/signup">
             <button className="mt-4 rounded-lg bg-primary-300 px-8 py-4 font-semibold text-white hover:bg-primary-500 sm:w-auto">
               Get Started
             </button>
