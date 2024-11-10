@@ -3,28 +3,36 @@ import * as Yup from "yup";
 import Link from "next/link";
 import { useState } from "react";
 import { Formik, Form } from "formik";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { useRouter } from "next/navigation";
 import MyTextInput from "@/components/MyTextInput";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import MyPasswordInput from "@/components/MyPasswordInput";
+import { doc, getDoc } from "firebase/firestore";
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const initialValues = {
-    matNum: "", 
+    matNum: "",
     email: "",
     password: "",
   };
 
+  function generateMatricPattern() {
+    const currentYear = new Date().getFullYear();
+    const sessionYear = currentYear - 2;
+    const nextYear = currentYear - 1;
+
+    return new RegExp(
+      `^M\\.(${sessionYear.toString().slice(-2)}|${nextYear.toString().slice(-2)})\\/(ND|HND)\\/(CSIT|PEG|PNGPD|EEED|ESMT|SLT|PMBS|CET|ISET|MPRE|MEC|WEOT)\\/\\d{5}$`,
+    );
+  }
+
   const schemaObject = Yup.object({
     matNum: Yup.string()
-      .matches(
-        /^M\.\d{2}\/(ND|HND)\/[A-Z]+\/\d{5}$/,
-        "Invalid matriculation number format",
-      )
+      .matches(generateMatricPattern(), "Invalid matriculation number format")
       .required("Matriculation number is required"),
     email: Yup.string().email("Invalid email address").required("Required"),
     password: Yup.string().required("Password is required"),
@@ -39,10 +47,33 @@ const Login = () => {
         values.email,
         values.password,
       );
-      const token = await userCredential.user.getIdToken();
-      document.cookie = `token=${token}; path=/`;
 
-      router.push("/home");
+      const user = userCredential.user;
+
+      // Fetch the user document from Firestore
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+
+        // Check if the matriculation number matches
+        if (userData.matNum === values.matNum) {
+          const token = await user.getIdToken();
+          document.cookie = `token=${token}; path=/`;
+
+          router.push("/home");
+        } else {
+          alert("Matriculation number does not match our records.");
+        }
+      } else {
+        alert("No user data found. Please contact support.");
+      }
+
+      // const token = await userCredential.user.getIdToken();
+      // document.cookie = `token=${token}; path=/`;
+
+      // router.push("/home");
     } catch (error) {
       alert("Login error!! \n", error.message);
     } finally {
@@ -73,7 +104,7 @@ const Login = () => {
             name="matNum"
             id="matNum"
             type="text"
-            placeholder="M.21/ND/CSIT/14769"
+            placeholder="M.--/--/--/--"
           />
 
           <MyTextInput

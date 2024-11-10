@@ -20,6 +20,9 @@ import {
 } from "lucide-react";
 import { AuthContext } from "@/app/Context/AuthContext";
 import { Menu, MenuItem, MenuItems, MenuButton } from "@headlessui/react";
+import { signOut } from 'firebase/auth';
+import { auth } from '@/app/config/firebase';
+import { Router } from 'next/router';
 
 const NavBar = () => {
   const pathname = usePathname();
@@ -33,7 +36,7 @@ const NavBar = () => {
     try {
       signOut(auth);
       document.cookie = "token=; Max-Age=0; path=/"; // Clear token
-      router.push("/"); // Redirect to login
+      Router.push("/"); // Redirect to login
     } catch (error) {
       console.log(error);
     }
@@ -123,7 +126,7 @@ const NavBar = () => {
                 <Link href="/login">
                   <button
                     type="button"
-                    className="bg-primary rounded-lg px-4 py-2 text-center font-bold text-white"
+                    className="bg-primary-100 rounded-lg px-4 py-2 text-center font-bold text-white"
                   >
                     Login
                   </button>
