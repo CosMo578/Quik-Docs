@@ -8,7 +8,7 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "Student Study Portal",
+  title: "Student Result Checker",
   description:
     "A Student platform tailored to provide course materials, quizzes and an open chatroom for all to share knowledge and learn.",
 };
@@ -17,7 +17,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <AuthContextProvider>{children}</AuthContextProvider>
+        {/* <AuthContextProvider>
+          </AuthContextProvider> */}
+          {children}
       </body>
     </html>
   );

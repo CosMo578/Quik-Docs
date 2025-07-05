@@ -4,11 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/navigation";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../config/firebase.js";
-import MyTextInput from "@/components/MyTextInput";
-import MyPasswordInput from "@/components/MyPasswordInput";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import TextInput from "@/components/TextInput";
+import PasswordInput from "@/components/PasswordInput";
 
 const Signup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,15 +77,15 @@ const Signup = () => {
         onSubmit={handleSubmit}
       >
         <Form className="flex flex-col gap-5 p-6 lg:mx-auto lg:w-[50%]">
-          <MyTextInput
+          <TextInput
             label="Mat. Number"
             name="matNum"
             id="matNum"
             type="text"
-            placeholder="M.--/--/--/--"
+            placeholder="M.24/ND/CSIT/14***"
           />
 
-          <MyTextInput
+          <TextInput
             label="Email Address"
             name="email"
             id="email"
@@ -96,14 +93,14 @@ const Signup = () => {
             placeholder="tonystark@gmail.com"
           />
 
-          <MyPasswordInput
+          <PasswordInput
             label="Enter Password"
             name="password"
             id="password"
             placeholder="*********"
           />
 
-          <MyPasswordInput
+          <PasswordInput
             label="Confirm Password"
             name="confirmPassword"
             id="confirmPassword"

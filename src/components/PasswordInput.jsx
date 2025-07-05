@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useField } from "formik";
 import { Eye, EyeOff } from "lucide-react";
 
-const MyPasswordInput = ({ label, ...props }) => {
+const PasswordInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -37,4 +37,4 @@ const MyPasswordInput = ({ label, ...props }) => {
   );
 };
 
-export default MyPasswordInput;
+export default PasswordInput;
