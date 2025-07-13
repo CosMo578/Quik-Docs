@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 import { X } from "lucide-react";
-import { supabase } from "@/app/lib/supabaseClient";
+import { createClient } from "../../../utils/supabase/client";
+import Papa from "papaparse"; // For CSV parsing
 
 const UploadResult = () => {
   const [files, setFiles] = useState([]);
-
+  const supabase = createClient();
   const [resultData, setResultData] = useState({
     department: "",
     session: "",
@@ -24,19 +25,81 @@ const UploadResult = () => {
 
     const file = files[0];
 
-    // Create a custom file name using form values
-    const safeFileName =
-      `${resultData.department}-${resultData.level}-${resultData.semester}-${resultData.session}`
-        .replace(/[^a-zA-Z0-9-_]/g, "_") // replaces spaces and slashes with underscores
+    // Create a custom table name using form values
+    const safeTableName =
+      `${resultData.department}_${resultData.level}_${resultData.semester}_${resultData.session}`
+        .replace(/[^a-zA-Z0-9-_]/g, "_") // Replace spaces and special chars with underscores
         .toLowerCase();
-
-    const extension = file.name.split(".").pop(); // get file extension
-    const filePath = `uploads/${safeFileName}.${extension}`; // final file path
 
     try {
       setUploading(true);
 
-      const { data: storageData, error: uploadError } = await supabase.storage
+      // Parse CSV file
+      const text = await file.text();
+      const { data: csvData, errors } = Papa.parse(text, { header: true });
+
+      console.log("Process 1 Done");
+
+      if (errors.length > 0) {
+        throw new Error("Invalid CSV format");
+      }
+
+      // Create new table dynamically
+      const tableCreationSql = `
+        CREATE TABLE ${safeTableName} (
+          id SERIAL PRIMARY KEY,
+          matriculation_number VARCHAR(20) UNIQUE NOT NULL,
+          attendance_percent INTEGER,
+          com113_grade VARCHAR(2),
+          com113_units INTEGER,
+          com111_grade VARCHAR(2),
+          com111_units INTEGER,
+          com112_grade VARCHAR(2),
+          com112_units INTEGER,
+          com115_grade VARCHAR(2),
+          com115_units INTEGER,
+          com114_grade VARCHAR(2),
+          com114_units INTEGER,
+          mth111_grade VARCHAR(2),
+          mth111_units INTEGER,
+          gns101_grade VARCHAR(2),
+          gns101_units INTEGER,
+          gns127_grade VARCHAR(2),
+          gns127_units INTEGER,
+          pet101_grade VARCHAR(2),
+          pet101_units INTEGER,
+          ins104_grade VARCHAR(2),
+          ins104_units INTEGER,
+          tgp FLOAT,
+          gpa FLOAT,
+          remarks VARCHAR(50)
+        );
+      `;
+
+      console.log("Process 2 Done");
+
+      const { error: creationError } = await supabase.rpc("create_table", {
+        table_name: safeTableName,
+        sql_query: tableCreationSql,
+      });
+
+      console.log("Process 3 Done");
+
+      if (creationError) throw creationError;
+
+      // Insert data into the new table
+      const { error: insertError } = await supabase
+        .from(safeTableName)
+        .insert(csvData);
+
+      console.log("Process 1 Done");
+
+      if (insertError) throw insertError;
+
+      // Optional: Upload file to storage for backup
+      const extension = file.name.split(".").pop();
+      const filePath = `uploads/${safeTableName}.${extension}`;
+      const { error: uploadError } = await supabase.storage
         .from("results")
         .upload(filePath, file, {
           contentType: file.type,
@@ -44,16 +107,19 @@ const UploadResult = () => {
 
       if (uploadError) throw uploadError;
 
-      alert("Result uploaded and stored successfully!");
+      alert("Result uploaded and table created successfully!");
       setResultData({
         department: "",
         session: "",
         semester: "",
         level: "",
       });
+      setFiles([]);
     } catch (error) {
-      console.error("Error uploading result:", error);
-      alert("Failed to upload result. Please try again.");
+      console.error("Error processing result:", error);
+      alert(
+        "Failed to process result. Please check the CSV format or try again.",
+      );
     } finally {
       setUploading(false);
     }
@@ -86,56 +152,51 @@ const UploadResult = () => {
                   d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                 />
               </svg>
-
               <p className="mb-2 text-base text-gray-500">
                 <span className="font-semibold text-primary-100">
                   Click to upload
                 </span>{" "}
                 or drag and drop
               </p>
-              <p className="text-sm text-gray-500">XLSX/CSV (MAX. 10MB)</p>
+              <p className="text-sm text-gray-500">CSV (MAX. 10MB)</p>
             </div>
             <input
               id="dropzone-file"
               type="file"
               className="hidden"
-              accept=".csv, .xlsx"
+              accept=".csv"
               onChange={(e) => setFiles(Array.from(e.target.files))}
-              multiple
+              multiple={false} // Disable multiple files
               required
             />
           </label>
         </div>
 
         <div className="w-full">
-          {files.map((file, index) => {
-            return (
-              <div
-                className="flex items-center justify-between rounded-md bg-gray-200 p-3"
-                key={index}
+          {files.map((file, index) => (
+            <div
+              className="flex items-center justify-between rounded-md bg-gray-200 p-3"
+              key={index}
+            >
+              <p className="uppercase">
+                {`${resultData.level} ${resultData.department} - ${resultData.semester}, ${resultData.session}`}
+              </p>
+              <button
+                className="ms-4 rounded-md bg-red-500 p-2 text-white"
+                type="button"
+                onClick={() =>
+                  setFiles(files.filter((f) => f.name !== file.name))
+                }
               >
-                <p className="uppercase">
-                  {`
-                   ${resultData.level} ${resultData.department}
-                  - ${resultData.semester}, ${resultData.session}`}
-                </p>
-                <button
-                  className="ms-4 rounded-md bg-red-500 p-2 text-white"
-                  type="button"
-                  onClick={() =>
-                    setFiles(files.filter((f) => f.name !== file.name))
-                  }
-                >
-                  <X />
-                </button>
-              </div>
-            );
-          })}
+                <X />
+              </button>
+            </div>
+          ))}
         </div>
 
         <div className="grid w-full grid-cols-2 items-center gap-8">
           <select
-            className="w-full cursor-pointer rounded-md"
+            className="w-full cursor-pointer rounded-md p-3"
             name="level"
             id="level"
             value={resultData.level}
@@ -154,7 +215,7 @@ const UploadResult = () => {
           </select>
 
           <select
-            className="w-full cursor-pointer rounded-md"
+            className="w-full cursor-pointer rounded-md p-3"
             name="department"
             id="department"
             value={resultData.department}
@@ -177,13 +238,13 @@ const UploadResult = () => {
             <option value="PNGPD">Petroleum and National Gas Processing</option>
             <option value="ISET">Industrial Safety</option>
             <option value="MEC">Mechanical</option>
-            <option value="EEED">Electrical </option>
+            <option value="EEED">Electrical</option>
           </select>
         </div>
 
         <div className="grid w-full grid-cols-2 items-center gap-8">
           <select
-            className="w-full cursor-pointer rounded-md"
+            className="w-full p-3 cursor-pointer rounded-md "
             name="semester"
             id="semester"
             value={resultData.semester}
@@ -214,6 +275,7 @@ const UploadResult = () => {
         <button
           type="submit"
           className="w-full cursor-pointer rounded-md bg-primary-100 py-3 font-semibold text-white"
+          disabled={uploading}
         >
           {uploading ? "Uploading result..." : "Upload Result"}
         </button>

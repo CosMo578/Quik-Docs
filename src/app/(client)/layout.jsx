@@ -1,12 +1,10 @@
-import Header from "@/components/Header";
-import NavBar from "@/components/NavBar";
-import React from "react";
+import NavBar from "../../components/NavBar";
 
-const Layout = () => {
+const Layout = ({ children }) => {
   return (
     <>
-      <Header />
       <NavBar />
+      <div className="mt-10 p-4 lg:ml-64">{children}</div>
     </>
   );
 };

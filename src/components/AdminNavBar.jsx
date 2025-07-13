@@ -3,21 +3,21 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Upload } from "lucide-react";
 import { MessageSquareDot } from "lucide-react";
-import { useAdmin } from '@/app/Context/AdminAuthContext';
+import { useAdmin } from "../app/context/AdminAuthContext";
 
 const AdminNavBar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   const { admin, signOut } = useAdmin();
-  const router = useRouter();
 
   const handleSignOut = async () => {
     try {
       await signOut();
+      alert('Sign out Successful!!')
     } catch (error) {
       console.error("Sign out error:", error);
     }
@@ -25,7 +25,7 @@ const AdminNavBar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <nav className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white">
         <div className="p-5 py-7 lg:px-8 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -54,19 +54,22 @@ const AdminNavBar = () => {
                 <Image
                   className="me-3 text-3xl"
                   src="/pti-logo.svg"
-                  alt=""
+                  alt="PTI logo"
                   width={50}
                   height={50}
                 />
               </Link>
 
-              {admin && <p className="text-sm lg:mb-4">{admin.email}</p>}
+              <h1 className="flex items-center gap-2">
+                Hello Admin,
+                {admin && <p className="text-sm lg:mb-4">{admin.email}</p>}
+              </h1>
             </div>
 
             <button
               type="button"
-              onClick={handleSignOut}
-              className="rounded-lg bg-primary-100 px-4 py-2 text-center font-bold text-white"
+              onClick={() => handleSignOut()}
+              className="rounded-lg border-2 border-primary-100 bg-primary-100 px-4 py-2 text-center font-bold text-white hover:bg-transparent hover:text-primary-100"
             >
               Logout
             </button>

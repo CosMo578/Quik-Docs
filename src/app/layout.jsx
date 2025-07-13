@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Outfit } from "next/font/google";
-import { AuthContextProvider } from "./Context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 
 const outfit = Outfit({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -17,9 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        {/* <AuthContextProvider>
-          </AuthContextProvider> */}
-          {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

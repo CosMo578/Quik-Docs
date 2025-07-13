@@ -1,9 +1,10 @@
 "use client";
-import { supabase } from '@/app/lib/supabaseClient';
+import { createClient } from '../../../utils/supabase/client';
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
   const [files, setFiles] = useState([]);
+  const supabase = createClient();
 
   useEffect(() => {
     const loadFiles = async () => {
@@ -19,7 +20,7 @@ const Dashboard = () => {
     };
 
     loadFiles();
-  }, []);
+  }, [supabase.storage]);
 
   return (
     <div className="p-4">

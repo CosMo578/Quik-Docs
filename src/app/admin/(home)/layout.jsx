@@ -1,6 +1,6 @@
 "use client";
-import { AdminAuthProvider } from "@/app/Context/AdminAuthContext";
-import AdminNavBar from "@/components/AdminNavBar";
+import { AdminAuthProvider } from "../../context/AdminAuthContext";
+import AdminNavBar from "../../../components/AdminNavBar";
 
 export default function AdminLayout({ children }) {
   return (

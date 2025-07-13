@@ -1,7 +1,8 @@
 "use client";
 import { useField } from "formik";
 
-const MyTextInput = ({ label, ...props }) => {
+const TextInput = ({ label, ...props }) => {
+  
   const [field, meta] = useField(props);
 
   return (
@@ -24,4 +25,4 @@ const MyTextInput = ({ label, ...props }) => {
   );
 };
 
-export default MyTextInput;
+export default TextInput;

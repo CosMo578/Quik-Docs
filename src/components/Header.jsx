@@ -7,7 +7,7 @@ const Header = () => {
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="md:flex md:items-center md:gap-12">
-            <a className="block text-primary-300" href="/">
+            <Link className="block text-primary-300" href="/">
               <span className="sr-only">Home</span>
               <Image
                 src="/pti-logo.svg"
@@ -15,7 +15,7 @@ const Header = () => {
                 width={50}
                 height={50}
               />
-            </a>
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">
